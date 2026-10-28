@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مینی‌اپ مسابقات ایفوتبال</title>
+    <script src="https://jsdelivr.net"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
         body {
@@ -16,47 +17,29 @@
         .page { display: none; }
         .page.active { display: block; }
         h1, h2 { text-align: center; margin-bottom: 20px; text-shadow: 2px 2px 4px #000; }
-        
-        /* دکمه‌های صفحه اصلی */
         .menu-container { display: flex; flex-direction: column; gap: 15px; margin-top: 50px; }
         .menu-btn {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.4);
-            color: white;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.4); color: white;
+            padding: 20px; font-size: 18px; font-weight: bold; border-radius: 12px;
+            cursor: pointer; text-align: center; transition: 0.3s;
         }
         .menu-btn:hover { background: rgba(255, 255, 255, 0.4); }
         .back-btn { background: #e74c3c; padding: 10px 20px; border: none; color: white; border-radius: 8px; cursor: pointer; margin-bottom: 20px; display: inline-block; }
-
-        /* لیست‌های عمودی */
         .list-item {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-left: 5px solid #3498db;
+            background: rgba(0, 0, 0, 0.7); border-radius: 10px; padding: 15px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 15px; border-left: 5px solid #3498db;
         }
         .list-item img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; background: #555; }
         .item-details { flex-grow: 1; }
         .item-details p { font-size: 13px; color: #ccc; margin-top: 4px; }
         .item-rank { font-size: 24px; font-weight: bold; color: #f1c40f; }
-
-        /* تب‌های افقی تورنمنت */
         .tabs { display: flex; justify-content: space-between; gap: 5px; margin-bottom: 20px; }
         .tab-btn { flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid #555; color: white; border-radius: 5px; cursor: pointer; font-size: 12px; text-align: center; }
         .tab-btn.active { background: #3498db; border-color: #3498db; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        .loading { text-align: center; color: #aaa; padding: 20px; }
     </style>
 </head>
 <body>
@@ -75,88 +58,98 @@
     <div id="rank-page" class="page">
         <button class="back-btn" onclick="showPage('main-page')">بازگشت</button>
         <h2>رتبه‌بندی بازیکنان</h2>
-        <div id="players-list">
-            <!-- اطلاعات فرضی که بعداً از دیتابیس خوانده می‌شود -->
-            <div class="list-item">
-                <img src="https://picsum.photos" alt="player">
-                <div class="item-details">
-                    <h3>نام بازیکن ۱</h3>
-                    <p>بازی‌ها: ۱۲ | جام‌ها: ۳ | بردها: ۹</p>
-                    <p>تورنمنت برد: جام رمضان | باخت: جام حذفی</p>
-                </div>
-                <div class="item-rank">#۱</div>
-            </div>
-        </div>
+        <div id="players-list"><div class="loading">در حال بارگذاری اطلاعات بازیکنان...</div></div>
     </div>
 
     <!-- صفحه جام‌ها -->
     <div id="jams-page" class="page">
         <button class="back-btn" onclick="showPage('main-page')">بازگشت</button>
         <h2>لیست جام‌ها</h2>
-        <div id="jams-list">
-            <div class="list-item">
-                <img src="https://picsum.photos" alt="jam">
-                <div class="item-details">
-                    <h3>جام طلایی ایفوتبال</h3>
-                    <p>نوع: حذفی | ارزش: ۵۰۰ سکه</p>
-                </div>
-            </div>
-        </div>
+        <div id="jams-list"><div class="loading">در حال بارگذاری لیست جام‌ها...</div></div>
     </div>
 
     <!-- صفحه تورنمنت‌ها -->
     <div id="tournaments-page" class="page">
         <button class="back-btn" onclick="showPage('main-page')">بازگشت</button>
         <h2>بخش تورنمنت‌ها</h2>
-        
-        <!-- تب‌های افقی بالا -->
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab('active-t')">تورنمنت فعال</button>
             <button class="tab-btn" onclick="showTab('past-t')">تورنمنت گذشته</button>
             <button class="tab-btn" onclick="showTab('future-t')">تورنمنت آینده</button>
         </div>
-
-        <!-- محتوای تب‌ها -->
-        <div id="active-t" class="tab-content active">
-            <div class="list-item">
-                <div class="item-details">
-                    <h3>تورنمنت هفتگی بهار</h3>
-                    <p>زمان: ساعت ۲۱:۰۰ امروز</p>
-                    <p>برنده: هنوز مشخص نیست</p>
-                </div>
-            </div>
-        </div>
-        <div id="past-t" class="tab-content">
-            <div class="list-item">
-                <div class="item-details">
-                    <h3>تورنمنت بزرگ زمستان</h3>
-                    <p>زمان: هفته گذشته</p>
-                    <p>برنده: جواد عباسی</p>
-                </div>
-            </div>
-        </div>
-        <div id="future-t" class="tab-content">
-            <div class="list-item">
-                <div class="item-details">
-                    <h3>سوپر جام تابستانه</h3>
-                    <p>زمان: ۲ تیر ماه</p>
-                    <p>برنده: نامعلوم</p>
-                </div>
-            </div>
-        </div>
+        <div id="active-t" class="tab-content active"><div class="loading">در حال بارگذاری...</div></div>
+        <div id="past-t" class="tab-content"><div class="loading">در حال بارگذاری...</div></div>
+        <div id="future-t" class="tab-content"><div class="loading">در حال بارگذاری...</div></div>
     </div>
 
     <script>
-        // جاوااسکریپت برای جابجایی بین صفحات و تب‌ها
+        // مشخصات اختصاصی دیتابیس شما
+        const supabaseUrl = 'https://supabase.co';
+        const supabaseKey = 'sb_publishable_akKpDbG-a5bKCUowoetL4Q_MbIv__vO'; 
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
+            if(pageId === 'rank-page') loadPlayers();
+            if(pageId === 'jams-page') loadJams();
+            if(pageId === 'tournaments-page') loadTournaments();
         }
+
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
+        }
+
+        async function loadPlayers() {
+            const { data, error } = await _supabase.from('players').select('*').order('player_rank', { ascending: true });
+            const container = document.getElementById('players-list');
+            if (error || !data.length) { container.innerHTML = '<div class="loading">بازیکنی یافت نشد. از پنل Supabase اضافه کنید.</div>'; return; }
+            container.innerHTML = data.map(p => `
+                <div class="list-item">
+                    <img src="${p.player_image || 'https://picsum.photos'}" alt="player">
+                    <div class="item-details">
+                        <h3>${p.player_name}</h3>
+                        <p>بازی‌ها: ${p.matches_count} | جام‌ها: ${p.jams_count} | بردها: ${p.wins_count}</p>
+                        <p>برد: ${p.won_tournaments || '-'} | باخت: ${p.lost_tournaments || '-'}</p>
+                    </div>
+                    <div class="item-rank">#${p.player_rank || ''}</div>
+                </div>
+            `).join('');
+        }
+
+        async function loadJams() {
+            const { data, error } = await _supabase.from('jams').select('*');
+            const container = document.getElementById('jams-list');
+            if (error || !data.length) { container.innerHTML = '<div class="loading">جامی یافت نشد. از پنل Supabase اضافه کنید.</div>'; return; }
+            container.innerHTML = data.map(j => `
+                <div class="list-item">
+                    <img src="${j.jam_image || 'https://picsum.photos'}" alt="jam">
+                    <div class="item-details">
+                        <h3>${j.jam_name}</h3>
+                        <p>نوع: ${j.jam_type || '-'} | ارزش: ${j.jam_value || '-'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadTournaments() {
+            const { data, error } = await _supabase.from('tournaments').select('*, jams(jam_name)');
+            if (error) return;
+            const render = status => data.filter(t => t.tournament_status === status).map(t => `
+                <div class="list-item">
+                    <div class="item-details">
+                        <h3>جام: ${t.jams?.jam_name || 'نامعلوم'}</h3>
+                        <p>زمان: ${t.tournament_time || '-'}</p>
+                        <p>برنده: ${t.winner_name || 'هنوز مشخص نیست'}</p>
+                    </div>
+                </div>
+            `).join('') || '<div class="loading">تورنمنتی در این بخش نیست.</div>';
+            document.getElementById('active-t').innerHTML = render('active');
+            document.getElementById('past-t').innerHTML = render('past');
+            document.getElementById('future-t').innerHTML = render('future');
         }
     </script>
 </body>
